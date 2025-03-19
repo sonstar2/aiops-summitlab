@@ -7,10 +7,10 @@
       ansible.builtin.dnf:
         name: httpd
         state: present
-      notify:
-        - restart apache
       tags:
         - always
+      notify:
+        - Restart apache
 
     - name: Add InvalidDirectiveHere
       ansible.builtin.lineinfile:
@@ -22,7 +22,7 @@
         - never
         - break
       notify:
-        - restart apache
+        - Restart apache
 
     - name: Maintain httpd.conf
       ansible.builtin.lineinfile:
@@ -33,7 +33,7 @@
         - never
         - restore
       notify:
-        - restart apache
+        - Restart apache
 
   handlers:
     - name: Restart apache
