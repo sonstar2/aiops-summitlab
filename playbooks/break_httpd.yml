@@ -1,0 +1,38 @@
+---
+- name: Add bad directive under in Apache configuration
+  hosts: node1
+  become: true
+  tasks:
+    - name: Ensure Apache is installed
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Add InvalidDirectiveHere
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        insertafter: '^ServerRoot'
+        line: 'InvalidDirectiveHere'
+        state: present
+      tags:
+        - never
+        - break
+      notify:
+        - restart apache
+
+    - name: Maintain httpd.conf
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^InvalidDirectiveHere$'  # Matches the line exactly
+        state: absent
+      tags:
+        - never
+        - restore
+      notify:
+        - restart apache
+
+  handlers:
+    - name: Restart apache
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
