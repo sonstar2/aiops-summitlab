@@ -9,6 +9,8 @@
         state: present
       notify:
         - restart apache
+      tags:
+        - always
 
     - name: Add InvalidDirectiveHere
       ansible.builtin.lineinfile:
