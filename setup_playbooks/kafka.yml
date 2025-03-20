@@ -65,7 +65,9 @@
 
     - name: Debug Kafka Topics
       ansible.builtin.debug:
-        var: topic_list.stdout_lines
+        msg:
+          - topic_list.stdout_lines "{{ topic_list.stdout_lines }}"
+          - topic_list.stdout "{{ topic_list.stdout_lines }}"
 
     - name: Push a Kafka topic
       ansible.builtin.command:
@@ -75,7 +77,7 @@
       retries: 5
       delay: 5
       until: push_topic.rc == 0
-      when: kafka_topic not in topic_list.stdout_lines
+      when: kafka_topic not in topic_list.stdout_lines and kafka_topic not in topic_list.stdout
 
     - name: List Kafka topics
       ansible.builtin.command:
@@ -85,9 +87,11 @@
       retries: 5
       delay: 5
       until: topic_list_2.rc == 0
-      when: kafka_topic not in topic_list.stdout_lines
+      when: kafka_topic not in topic_list.stdout_lines and kafka_topic not in topic_list.stdout
 
     - name: Debug Kafka Topics
       ansible.builtin.debug:
-        var: topic_list.stdout_lines
-      when: kafka_topic not in topic_list.stdout_lines
+        msg:
+          - topic_list.stdout_lines "{{ topic_list.stdout_lines }}"
+          - topic_list.stdout "{{ topic_list.stdout_lines }}"
+      when: kafka_topic not in topic_list.stdout_lines and kafka_topic not in topic_list.stdout
