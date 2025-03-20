@@ -43,7 +43,7 @@
           KAFKA_NODE_ID: "1"
           KAFKA_PROCESS_ROLES: "broker,controller"
           KAFKA_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:9093"
-          KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+          KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://service1:9092"
           KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
           KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
           KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"
@@ -75,7 +75,7 @@
       retries: 5
       delay: 5
       until: push_topic.rc == 0
-      when: "'test-topic' not in topic_list.stdout_lines"
+      when: kafka_topic not in topic_list.stdout_lines
 
     - name: List Kafka topics
       ansible.builtin.command:
@@ -85,9 +85,9 @@
       retries: 5
       delay: 5
       until: topic_list_2.rc == 0
-      when: "'{{ kafka_topic }}' not in topic_list.stdout_lines"
+      when: kafka_topic not in topic_list.stdout_lines
 
     - name: Debug Kafka Topics
       ansible.builtin.debug:
         var: topic_list.stdout_lines
-      when: "'{{ kafka_topic }}' not in topic_list.stdout_lines"
+      when: kafka_topic not in topic_list.stdout_lines

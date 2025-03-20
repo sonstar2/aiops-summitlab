@@ -1,11 +1,11 @@
 ---
 - name: Import Elastic GPG key
-  rpm_key:
+  ansible.builtin.pm_key:
     key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
 
 - name: Create Elastic repository file
-  copy:
+  ansible.builtin.copy:
     dest: /etc/yum.repos.d/elastic.repo
     content: |
       [elastic-8.x]
