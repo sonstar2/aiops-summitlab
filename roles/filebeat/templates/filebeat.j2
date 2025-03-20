@@ -1,0 +1,13 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/httpd/error_log
+    fields:
+      type: apache_httpd
+
+output.kafka:
+  hosts: ["{{ filebeat_kafka_brokers }}"]
+  topic: "{{ filebeat_kafka_topic }}"
+  codec.json:
+    pretty: false
