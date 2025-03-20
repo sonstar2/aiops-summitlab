@@ -25,7 +25,7 @@
 
 - name: Configure Filebeat to read Apache logs and send to Kafka
   ansible.builtin.template:
-    src: filebeat.yml.j2
+    src: filebeat.j2
     dest: /etc/filebeat/filebeat.yml
     owner: root
     group: root
