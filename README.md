@@ -34,13 +34,7 @@ podman exec cp-kafka /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server lo
 podman exec cp-kafka /opt/kafka/bin/kafka-topics.sh --create --topic httpd-error-logs --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 ```
 
-3. Equivalent of `tail` for a particular Kafka topic
-
-```
-podman exec -it cp-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic httpd-error-logs
-```
-
-4. Retrieving all logs from the `httpd-error-logs` topic:
+3. Retrieving all logs from the `httpd-error-logs` topic:
 
 ```bash
 podman exec -it cp-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic httpd-error-logs --from-beginning
