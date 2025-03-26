@@ -4,7 +4,7 @@
   hosts: all
   sources:
    - ansible.eda.kafka:
-       host: rhel01-nostromo.demoredhat.com
+       host: service1
        port: 9092
        topic: network
 
