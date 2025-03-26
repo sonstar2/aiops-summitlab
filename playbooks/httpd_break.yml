@@ -40,3 +40,5 @@
       ansible.builtin.service:
         name: httpd
         state: restarted
+      register: httpd_restart_result
+      failed_when: "'Job for httpd.service failed' not in httpd_restart_result.msg | default('')"
