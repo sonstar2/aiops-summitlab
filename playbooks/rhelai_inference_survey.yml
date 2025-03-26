@@ -16,7 +16,7 @@
         headers:
           accept: "application/json"
           Content-Type: "application/json"
-          Authorization: "Bearer {{ api_token | default('ansible123!') }}"
+          Authorization: "Bearer {{ rhelai_token }}"
         body:
           prompt: "{{ gpt_prompt | default('What is the capital of the USA?') }}"
           max_tokens: "{{ max_tokens | default('200') }}"
