@@ -1,6 +1,6 @@
 ---
 - name: Fix Apache configuration
-  hosts: node1
+  hosts: all
   become: true
   tasks:
     - name: Ensure Apache is installed
