@@ -8,15 +8,15 @@
        topic: httpd-error-logs
 
   rules:
-   - name: apache shutdown detected
-     condition: event.body.message is search("shutting down")
-       action:
-         run_job_template:
+    - name: apache shutdown detected
+      condition: event.body.message is search("shutting down")
+      action:
+        run_job_template:
           organization: "Default"
           name: "Demo Job Template"
 
-   - name: show event messages
-     condition: event.body.message is defined
-       action:
-         debug:
-           msg: "{{ event.body.message }}"
+    - name: show event messages
+      condition: event.body.message is defined
+      action:
+        debug:
+          msg: "{{ event.body.message }}"
