@@ -10,12 +10,11 @@
       notify:
         - Restart apache
 
-    - name: Add InvalidDirectiveHere
+    - name: Maintain httpd.conf
       ansible.builtin.lineinfile:
         path: /etc/httpd/conf/httpd.conf
-        insertafter: '^ServerRoot'
-        line: 'InvalidDirectiveHere'
-        state: present
+        regexp: '^InvalidDirectiveHere$'
+        state: absent
       notify:
         - Restart apache
 
