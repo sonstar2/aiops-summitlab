@@ -5,13 +5,12 @@
    - ansible.eda.kafka:
        host: service1
        port: 9092
-       topic: network
+       topic: httpd-error-logs
 
   rules:
    - name: http config issue
-   #  condition: event.body.syslog.facility == "3" and event.body.journald.unit is match("httpd.service") and event.body.message is match("Failed to start The Apache HTTP Server.")
      condition: event.body.message is match("Failed to start The Apache HTTP Server.")
      action:
        run_job_template:
         organization: "Default"
-        name: "Restore Web Application"
+        name: "Demo Job Template"
