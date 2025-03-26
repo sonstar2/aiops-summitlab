@@ -3,9 +3,9 @@
 # Ansible playbook to check Kafka topic messages using console consumer
 
 - name: Check Kafka Topic Messages
-  hosts: all  # Adjust this to target the appropriate hosts in your inventory
+  hosts: all
   gather_facts: false
-  become: false  # Change to true if you need elevated privileges
+  become: true
 
   vars:
     kafka_container_name: cp-kafka
