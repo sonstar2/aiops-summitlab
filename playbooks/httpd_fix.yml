@@ -1,5 +1,5 @@
 ---
-- name: Add bad directive under in Apache configuration
+- name: Fix Apache configuration
   hosts: node1
   become: true
   tasks:
