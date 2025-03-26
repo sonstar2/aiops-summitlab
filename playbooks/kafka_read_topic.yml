@@ -26,6 +26,7 @@
         --max-messages {{ max_messages }}
         --timeout-ms {{ timeout_ms }}
       register: kafka_messages
+      changed_when: false
 
     - name: Display Kafka topic messages
       ansible.builtin.debug:
