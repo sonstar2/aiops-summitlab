@@ -8,8 +8,8 @@
        topic: httpd-error-logs
 
   rules:
-   - name: http config issue
-     condition: event.body.message is match("Failed to start The Apache HTTP Server.")
+   - name: apache shutdown detected
+     condition: event.body.message is match("shutting down")
      action:
        run_job_template:
         organization: "Default"

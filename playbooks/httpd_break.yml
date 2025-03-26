@@ -2,6 +2,7 @@
 - name: Add bad directive under in Apache configuration
   hosts: all
   become: true
+
   tasks:
     - name: Ensure Apache is installed
       ansible.builtin.dnf:
