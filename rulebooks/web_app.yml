@@ -1,6 +1,5 @@
 ---
 - name: Web app issue
-
   hosts: all
   sources:
    - ansible.eda.kafka:
