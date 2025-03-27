@@ -29,7 +29,7 @@
 
     - name: Check if response is JSON and debug output
       ansible.builtin.debug:
-        msg: "{{ response.json if response.json is defined else response.content }}"
+        msg: "{{ gpt_response.json if gpt_response.json is defined else gpt_response.content }}"
 
     - name: Set stats for next controller job
       ansible.builtin.set_stats:
