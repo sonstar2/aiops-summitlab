@@ -7,7 +7,6 @@
     - name: Set systemd facts
       ansible.builtin.set_fact:
         linux_service: "{{ input_linux_service | default('httpd') }}"
-      register: service_status
 
     - name: Check if httpd is running
       check_mode: true
@@ -62,4 +61,4 @@
 
     - name: Display gpt prompt
       ansible.builtin.debug:
-        msg: "{{ gpt_prompt }}"
+        msg: "{{  hostvars[inventory_hostname]['gpt_prompt'] }}"
