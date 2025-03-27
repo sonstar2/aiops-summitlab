@@ -61,4 +61,4 @@
 
     - name: Display gpt prompt
       ansible.builtin.debug:
-        msg: "{{  hostvars[inventory_hostname]['gpt_prompt'] }}"
+        msg: "{{  hostvars.localhost }}"
