@@ -11,9 +11,9 @@
     - name: apache shutdown detected
       condition: event.body.message is search("shutting down")
       action:
-        run_job_template:
+        run_workflow_template:
           organization: "Default"
-          name: "Demo Job Template"
+          name: "Workflow One"
 
     - name: show event messages
       condition: event.body.message is defined
