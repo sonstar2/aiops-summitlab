@@ -1,0 +1,35 @@
+---
+- name: Send logs to Mattermost on HTTP failure
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    mattermost_token: ""
+    mattermost_instance: ""
+
+  tasks:
+    - name: Fail if required variables are not set
+      ansible.builtin.fail:
+        msg: "Both Mattermost Instance and token must be set!"
+      when: mattermost_instance | default('') | trim == '' or mattermost_token | default('') | trim == ''
+
+    - name: Set systemd facts
+      ansible.builtin.set_fact:
+        linux_service: "{{ input_linux_service | default('httpd') }}"
+
+    - name: Send notification message via Mattermost
+      community.general.mattermost:
+        url: "{{ mattermost_instance }}"
+        api_key: "{{ mattermost_token }}"
+        attachments:
+          - text: "!!!!!! ALERT !!!!!!"
+            color: '#ff00dd'
+            title: "{{ linux_service | capitalize }} error detected"
+            fields:
+              - title: Issue
+                value: "{{ linux_service | capitalize }} error Detected"
+                short: true
+              - title: Details
+                value: "{{ first_mattermost_message }}"
+                short: true
+      delegate_to: localhost
