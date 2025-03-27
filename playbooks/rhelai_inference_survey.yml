@@ -25,8 +25,13 @@
         return_content: true
         status_code: 200
         timeout: 60
-      register: response
+      register: gpt_response
 
     - name: Check if response is JSON and debug output
       ansible.builtin.debug:
         msg: "{{ response.json if response.json is defined else response.content }}"
+
+    - name: Set stats for next controller job
+      ansible.builtin.set_stats:
+        data:
+          gpt_response: "{{ gpt_response }}"
