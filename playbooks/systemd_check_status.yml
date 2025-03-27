@@ -58,7 +58,3 @@
 
             ### Response:
           max_tokens: 2000
-
-    - name: Display gpt prompt
-      ansible.builtin.debug:
-        msg: "{{  hostvars.localhost }}"
