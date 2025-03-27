@@ -30,6 +30,6 @@
                 value: "{{ linux_service | capitalize }} error Detected"
                 short: true
               - title: Details
-                value: "{{ first_mattermost_message }}"
+                value: "{{ gpt_prompt }}"
                 short: true
       delegate_to: localhost
