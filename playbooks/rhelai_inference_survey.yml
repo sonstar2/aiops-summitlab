@@ -19,7 +19,7 @@
           Authorization: "Bearer {{ rhelai_token }}"
         body:
           prompt: "{{ gpt_prompt | default('What is the capital of the USA?') }}"
-          max_tokens: "{{ max_tokens | default('200') }}"
+          max_tokens: "{{ max_tokens | default('2000') }}"
           model: "/root/.cache/instructlab/models/granite-8b-lab-v1"
         body_format: json
         return_content: true
