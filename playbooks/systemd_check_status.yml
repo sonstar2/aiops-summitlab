@@ -1,6 +1,6 @@
 ---
 - name: Retrieve additional info for AI
-  hosts: rhel01-nostromo.demoredhat.com
+  hosts: all
   become: true
   gather_facts: false
   tasks:
@@ -27,7 +27,7 @@
           No troubleshooting is needed. Current status shows service is active.
       when: not service_status.changed
 
-    - name: Check if {{ linux_service }} is running
+    - name: Check if status of {{ linux_service }}
       ansible.builtin.debug:
         msg: "{{ service_status.status.ActiveState if service_status.status.ActiveState is defined else 'ActiveState not found' }}"
 
@@ -41,7 +41,7 @@
       ansible.builtin.set_fact:
         systemd_log_output: "{{ systemd_logs.stdout }}"
 
-    - name: Display httpd logs
+    - name: Display systemd logs
       ansible.builtin.debug:
         msg: "{{ systemd_log_output }}"
 
@@ -55,7 +55,11 @@
             The {{ linux_service }} service will not start.
             Please help me troubleshoot this issue and get the service back online.
 
-            Here are recent error logs: {{ httpd_log_output }}
+            Here are recent error logs: {{ systemd_log_output }}
 
             ### Response:
           max_tokens: 2000
+
+    - name: Display gpt prompt
+      ansible.builtin.debug:
+        msg: "{{ gpt_prompt }}"
