@@ -4,11 +4,16 @@
   become: true
   gather_facts: false
   tasks:
+    - name: Set systemd facts
+      ansible.builtin.set_fact:
+        linux_service: "{{ input_linux_service | default('httpd') }}"
+      register: service_status
+
     - name: Check if httpd is running
       check_mode: true
       ansible.builtin.systemd_service:
         state: started
-        name: "{{ linux_service | default('http') }}"
+        name: "{{ linux_service }}"
       register: service_status
 
     - name: Check if httpd is running
@@ -18,35 +23,38 @@
     - name: Fail if service is running properly
       ansible.builtin.fail:
         msg: >
-          The {{ linux_service | default('http') }} service is already running correctly.
+          The {{ linux_service }} service is already running correctly.
           No troubleshooting is needed. Current status shows service is active.
       when: not service_status.changed
 
-    - name: Check if httpd is running
+    - name: Check if {{ linux_service }} is running
       ansible.builtin.debug:
         msg: "{{ service_status.status.ActiveState if service_status.status.ActiveState is defined else 'ActiveState not found' }}"
 
     - name: Retrieve last 20 lines of httpd logs
       ansible.builtin.command: journalctl -u httpd.service -n 20
-      register: httpd_logs
+      register: systemd_logs
       ignore_errors: true
       changed_when: false
 
     - name: Store httpd logs as a variable
       ansible.builtin.set_fact:
-        httpd_log_output: "{{ httpd_logs.stdout }}"
+        systemd_log_output: "{{ systemd_logs.stdout }}"
 
     - name: Display httpd logs
       ansible.builtin.debug:
-        msg: "{{ httpd_log_output }}"
+        msg: "{{ systemd_log_output }}"
 
     - name: Set stats for next controller job
       ansible.builtin.set_stats:
         data:
           gpt_prompt: |
             ### Instructions:
-            We have an issue on our RHEL Linux server with the Apache service. The Apache service will not start.
+            We have an issue on our Red Hat Enterprise Linux server with the {{ linux_service }} service.
+
+            The {{ linux_service }} service will not start.
             Please help me troubleshoot this issue and get the service back online.
+
             Here are recent error logs: {{ httpd_log_output }}
 
             ### Response:
