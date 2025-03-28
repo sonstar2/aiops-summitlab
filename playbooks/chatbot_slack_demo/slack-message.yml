@@ -31,7 +31,7 @@
         msg: "{{ service_status.status.ActiveState if service_status.status.ActiveState is defined else 'ActiveState not found' }}"
 
     - name: Retrieve last 5 lines of httpd logs
-      ansible.builtin.command: journalctl -u httpd.service -n 5
+      ansible.builtin.command: journalctl -u httpd.service -n 3
       register: systemd_logs
       ignore_errors: true
       changed_when: false
@@ -60,14 +60,16 @@
     #       max_tokens: 2000
 
 
+    - name: Create aap url
+      ansible.builtin.set_fact:
+        aap_job_url: "https://controller.gmtsf.sandbox1892.opentlc.com/execution/jobs/playbook/{{ hostvars.localhost.tower_job_id }}/output"
+
     - name: Set Slack message
       ansible.builtin.set_fact:
         slack_message: >-
-            Automation Controller job ID {{ hostvars.localhost.tower_job_id }}
-            has failed.
-            These are the failed logs from the managed_node
-            {{ systemd_log_output }}
-            Please investigate the failure on the Apache.
+          **Application (HTTPD) crashed**
+          `{{ systemd_log_output }}`
+          [Click for more]({{ aap_job_url }})
 
     - name: Notify Slack
       community.general.slack:
