@@ -2,32 +2,125 @@
 - name: Push to specified Git repository
   hosts: localhost
   gather_facts: false
-  vars:
+
   tasks:
-    - name: Display Ansible Playbook in YAML
+    - name: Set input vars
+      set_fact:
+        gitea_url: "https://bastion.tnn56.sandbox1790.opentlc.com:488"  # Replace with your Gitea URL
+        repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
+        repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
+        gitea_username: "{{ input_gitea_username | default('lab-user') }}"
+        gitea_password: "{{ input_gitea_password | default('Mjg0MDM4_1') }}"
+        repo_private: true
+
+    - name: Get authentication cookie
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/user/login"
+        method: GET
+        status_code: 200
+        validate_certs: false
+      register: login_page
+
+    - name: Extract CSRF token
+      ansible.builtin.set_fact:
+        csrf_token: "{{ login_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
+
+    - name: Login to Gitea
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/user/login"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          user_name: "{{ gitea_username }}"
+          password: "{{ gitea_password }}"
+          _csrf: "{{ csrf_token }}"
+        status_code: [200, 302]
+        follow_redirects: safe
+        validate_certs: false
+        return_content: true
+      register: login_result
+
+    - name: Get CSRF token for repository creation
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/repo/create"
+        method: GET
+        status_code: 200
+        validate_certs: false
+        follow_redirects: all
+        headers:
+          Cookie: "{{ login_result.cookies_string }}"
+      register: create_page
+
+    - name: Extract repository creation CSRF token
+      ansible.builtin.set_fact:
+        repo_csrf_token: "{{ create_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
+
+    - name: Create repository
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/repo/create"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          _csrf: "{{ repo_csrf_token }}"
+          uid: "1"  # This might need to be adjusted based on your user ID
+          repo_name: "{{ repo_name }}"
+          description: "{{ repo_description }}"
+          private: "{{ 'on' if repo_private else 'off' }}"
+          auto_init: "on"
+          default_branch: "main"
+          gitignores: "Python"
+          license: "MIT"
+          readme: "Default"
+        status_code: [200, 302]
+        follow_redirects: safe
+        headers:
+          Cookie: "{{ login_result.cookies_string }}"
+        validate_certs: false
+      register: repo_create
+
+    - name: Check if repository was created
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}"
+        method: GET
+        status_code: [200, 404]
+        headers:
+          Cookie: "{{ login_result.cookies_string }}"
+        validate_certs: false
+      register: repo_check
+
+    - name: Display repository creation status
       ansible.builtin.debug:
-        msg: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
+        msg: >
+          {% if repo_check.status == 200 %}
+          Repository {{ repo_name }} created or already exists.
+          {% else %}
+          Failed to create repository {{ repo_name }}.
+          {% endif %}
 
-    - name: Retrieve a repository from a distant location and make it available locally
-      ansible.scm.git_retrieve:
-        branch:
-          duplicate_detection: false
-          name: main
-        origin:
-          url: https://github.com/IPvSean/lightspeed_playbooks.git
-          token: "{{ github_token }}"
-        upstream:
-          url: https://github.com/IPvSean/lightspeed_playbooks.git
-          token: "{{ github_token }}"
-      register: repository
+    # - name: Display Ansible Playbook in YAML
+    #   ansible.builtin.debug:
+    #     msg: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
 
-    - name: Save formatted YAML response to file
-      ansible.builtin.copy:
-        content: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
-        dest: "{{ repository['path'] }}/lightspeed-response.yml"
-        mode: '0644'
+    # - name: Retrieve a repository from a distant location and make it available locally
+    #   ansible.scm.git_retrieve:
+    #     branch:
+    #       duplicate_detection: false
+    #       name: main
+    #     origin:
+    #       url: https://github.com/IPvSean/lightspeed_playbooks.git
+    #       token: "{{ github_token }}"
+    #     upstream:
+    #       url: https://github.com/IPvSean/lightspeed_playbooks.git
+    #       token: "{{ github_token }}"
+    #   register: repository
 
-    - name: Publish the changes
-      ansible.scm.git_publish:
-        path: "{{ repository['path'] }}"
-        token: "{{ github_token }}"
+    # - name: Save formatted YAML response to file
+    #   ansible.builtin.copy:
+    #     content: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
+    #     dest: "{{ repository['path'] }}/lightspeed-response.yml"
+    #     mode: '0644'
+
+    # - name: Publish the changes
+    #   ansible.scm.git_publish:
+    #     path: "{{ repository['path'] }}"
+    #     token: "{{ github_token }}"
