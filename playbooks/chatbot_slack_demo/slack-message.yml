@@ -71,8 +71,8 @@
     - name: Set Slack message
       ansible.builtin.set_fact:
         slack_message: >-
-          *Application Crash Detected (HTTPD)*
-          *Host:* `{{ crash_host }}`
+          *Application Crash Detected (HTTPD)*\n
+          *Host:* `{{ crash_host }}`\n
           *Job ID:*  `{{ hostvars.localhost.tower_job_id }}`
 
     - name: Notify Slack
