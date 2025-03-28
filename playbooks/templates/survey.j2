@@ -1,0 +1,14 @@
+{
+  "name": "Prompt Lightspeed",
+  "description": "Survey for working with Ansible Lightspeed",
+  "spec": [
+    {
+      "type": "text",
+      "question_name": "What is the Ansible Playbook you want created?",
+      "question_description": "This prompt will be used with Ansible Lightspeed to automatically generate an Ansible Playbook",
+      "variable": "lightspeed_prompt",
+      "required": true,
+      "default": "For all hosts, use become true,  Remove line that contains InvalidDirectiveHere from /etc/httpd/conf/httpd.conf and restart httpd"
+    }
+  ]
+}

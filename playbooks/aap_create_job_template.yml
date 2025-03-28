@@ -1,0 +1,20 @@
+---
+- name: Create Job Template with Survey
+  connection: localhost
+  gather_facts: false
+  tasks:
+
+
+    - name: Create Job Template
+      ansible.controller.job_template:
+        name: "Lightspeed Remediate"
+        job_type: "run"
+        inventory: "{{ input_inventory | default('Demo Inventory') }}"
+        project: "{{ input_project | default('AI-EDA') }}"
+        playbook: "{{ input_playbook | default('playbooks/lightspeed_generate.yml') }}"
+        credential: "{{ input_credential | default('AAP') }}"
+        survey_enabled: true
+        survey_spec: "{{ lookup('template', '{{ playbook_dir }}/templates/survey.j2') }}"
+        validate_certs: false
+        execution_environment: "Default execution environment"
+      run_once: true
