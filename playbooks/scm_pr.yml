@@ -11,7 +11,6 @@
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
         gitea_username: "{{ input_gitea_username | default('lab-user') }}"
         gitea_password: "{{ input_gitea_password | default('Mjg0MDM4_1') }}"
-        repo_private: true
 
     - name: Get authentication cookie
       ansible.builtin.uri:
@@ -22,13 +21,13 @@
         return_content: true
       register: login_page
 
-    - name: Debug entire login_page var
-      ansible.builtin.debug:
-        var: login_page
-
     - name: Extract CSRF token
       ansible.builtin.set_fact:
-        csrf_token: "{{ login_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
+        csrf_token: "{{ login_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | default([], true) | first | default('') }}"
+
+    - name: Debug extracted login CSRF token
+      ansible.builtin.debug:
+        var: csrf_token
 
     - name: Login to Gitea
       ansible.builtin.uri:
@@ -45,16 +44,6 @@
         return_content: true
       register: login_result
 
-    - name: Debug login result
-      ansible.builtin.debug:
-        var: login_result
-
-    - name: Debug cookies from login
-      ansible.builtin.debug:
-        var: login_result.cookies_string
-      when: login_result.cookies_string is defined
-
-    # Check if repository exists before attempting to create
     - name: Check if repository already exists
       ansible.builtin.uri:
         url: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}"
@@ -65,9 +54,9 @@
         validate_certs: false
       register: repo_check
 
-    - name: Debug repository check result
+    - name: Debug repository existence check
       ansible.builtin.debug:
-        var: repo_check
+        var: repo_check.status
 
     - name: Get CSRF token for repository creation
       ansible.builtin.uri:
@@ -75,7 +64,6 @@
         method: GET
         status_code: 200
         validate_certs: false
-        follow_redirects: all
         headers:
           Cookie: "{{ login_result.cookies_string }}"
         return_content: true
@@ -84,8 +72,13 @@
 
     - name: Extract repository creation CSRF token
       ansible.builtin.set_fact:
-        repo_csrf_token: "{{ create_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
-      when: repo_check.status == 404 and create_page is defined and create_page.content is defined
+        repo_csrf_token: "{{ create_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | default([], true) | first | default('') }}"
+      when: repo_check.status == 404
+
+    - name: Debug extracted repo creation CSRF token
+      ansible.builtin.debug:
+        var: repo_csrf_token
+      when: repo_check.status == 404
 
     - name: Create repository
       ansible.builtin.uri:
@@ -96,7 +89,7 @@
           _csrf: "{{ repo_csrf_token }}"
           repo_name: "{{ repo_name }}"
           description: "{{ repo_description }}"
-          private: "{{ 'on' if repo_private else 'off' }}"
+          private: "on"
           auto_init: "on"
           gitignores: "Python"
           license: "MIT"
@@ -111,11 +104,6 @@
       register: repo_create
       when: repo_check.status == 404
 
-    - name: Debug repository creation result
-      ansible.builtin.debug:
-        var: repo_create
-      when: repo_check.status == 404
-
     - name: Check if repository was created
       ansible.builtin.uri:
         url: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}"
@@ -128,9 +116,9 @@
 
     - name: Display repository creation status
       ansible.builtin.debug:
-        msg: >
+        msg: >-
           {% if repo_check_final.status == 200 %}
-          Repository {{ repo_name }} created or already exists.
+            Repository {{ repo_name }} created or already exists.
           {% else %}
-          Failed to create repository {{ repo_name }}.
+            Failed to create repository {{ repo_name }}.
           {% endif %}
