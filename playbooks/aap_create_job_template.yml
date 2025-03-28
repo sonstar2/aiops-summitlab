@@ -1,9 +1,9 @@
 ---
 - name: Create Job Template with Survey
-  connection: localhost
+  hosts: localhost
+  connection: local
   gather_facts: false
   tasks:
-
 
     - name: Create Job Template
       ansible.controller.job_template:
@@ -14,7 +14,6 @@
         playbook: "{{ input_playbook | default('playbooks/lightspeed_generate.yml') }}"
         credential: "{{ input_credential | default('AAP') }}"
         survey_enabled: true
-        survey_spec: "{{ lookup('template', '{{ playbook_dir }}/templates/survey.j2') }}"
+        survey_spec: "{{ lookup('template', playbook_dir + '/templates/survey.j2') }}"
         validate_certs: false
         execution_environment: "Default execution environment"
-      run_once: true
