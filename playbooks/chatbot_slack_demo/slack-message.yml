@@ -84,3 +84,7 @@
         username: 'AnsibleFest-bot'
         link_names: 0
         parse: 'none'
+
+    - name: HTTPD deployment has failed
+      ansible.builtin.fail:
+        msg: "Deployment has failed for HTTPD, because of invalidDirectiveHere error."
