@@ -21,6 +21,10 @@
         validate_certs: false
       register: login_page
 
+    - name: Debug entire login_page var
+      ansible.builtin.debug:
+        var: login_page
+
     - name: Extract CSRF token
       ansible.builtin.set_fact:
         csrf_token: "{{ login_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
