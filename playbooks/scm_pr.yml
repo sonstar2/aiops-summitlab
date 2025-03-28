@@ -54,17 +54,20 @@
         var: login_result.cookies_string
       when: login_result.cookies_string is defined
 
+    # Check if repository exists before attempting to create
     - name: Check if repository already exists
       ansible.builtin.uri:
-        url: "{{ gitea_url }}/api/v1/repos/{{ gitea_username }}/{{ repo_name }}"
+        url: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}"
         method: GET
+        status_code: [200, 404]
         headers:
           Cookie: "{{ login_result.cookies_string }}"
-        status_code: [200, 404]
         validate_certs: false
       register: repo_check
-      failed_when: false
 
+    - name: Debug repository check result
+      ansible.builtin.debug:
+        var: repo_check
     - name: Get CSRF token for repository creation
       ansible.builtin.uri:
         url: "{{ gitea_url }}/repo/create"
@@ -81,14 +84,13 @@
       ansible.builtin.set_fact:
         repo_csrf_token: "{{ create_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
 
-    - name: Create repository if it doesn't exist
+    - name: Create repository
       ansible.builtin.uri:
         url: "{{ gitea_url }}/repo/create"
         method: POST
         body_format: form-urlencoded
         body:
           _csrf: "{{ repo_csrf_token }}"
-          uid: "1"  # This might need to be adjusted based on your user ID
           repo_name: "{{ repo_name }}"
           description: "{{ repo_description }}"
           private: "{{ 'on' if repo_private else 'off' }}"
@@ -97,20 +99,19 @@
           gitignores: "Python"
           license: "MIT"
           readme: "Default"
-        status_code: [200, 302]
-        follow_redirects: safe
+        status_code: [200, 302, 303]
+        follow_redirects: all
         headers:
           Cookie: "{{ login_result.cookies_string }}"
         validate_certs: false
       register: repo_create
-      when: repo_check is defined and repo_check.status == 404
+      when: repo_check.status == 404
 
     - name: Debug repository creation result
       ansible.builtin.debug:
         var: repo_create
-      when: repo_check.status == 404
 
-    - name: Check if repository was created
+    - name: Check if repository exists
       ansible.builtin.uri:
         url: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}"
         method: GET
@@ -128,14 +129,3 @@
           {% else %}
           Failed to create repository {{ repo_name }}.
           {% endif %}
-
-    - name: Clone the repository locally (optional)
-      ansible.builtin.git:
-        repo: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}.git"
-        dest: "/tmp/{{ repo_name }}"
-        clone: yes
-        update: yes
-        username: "{{ gitea_username }}"
-        password: "{{ gitea_password }}"
-      when: repo_check_final.status == 200
-      ignore_errors: yes
