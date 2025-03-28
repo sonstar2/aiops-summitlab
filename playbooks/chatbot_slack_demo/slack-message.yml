@@ -64,12 +64,16 @@
       ansible.builtin.set_fact:
         aap_job_url: "https://controller.gmtsf.sandbox1892.opentlc.com/execution/jobs/playbook/{{ hostvars.localhost.tower_job_id }}/output"
 
+    - name: Crash host
+      ansible.builtin.set_fact:
+        crash_host: "https://controller.gmtsf.sandbox1892.opentlc.com"
+
     - name: Set Slack message
       ansible.builtin.set_fact:
         slack_message: >-
-          **Application (HTTPD) crashed**
-          `{{ systemd_log_output }}`
-          [Click for more]({{ aap_job_url }})
+          *Application Crash Detected (HTTPD)*
+          *Host:* `{{ crash_host }}`
+          *Job ID:*  `{{ hostvars.localhost.tower_job_id }}`
 
     - name: Notify Slack
       community.general.slack:
