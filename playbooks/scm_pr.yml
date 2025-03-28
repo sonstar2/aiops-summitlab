@@ -50,9 +50,9 @@
           description: "{{ repo_description }}"
           private: true
           auto_init: false
-        headers:
-          Cookie: "{{ login_result.cookies_string }}"
-          Content-Type: "application/json"
+        url_username: "{{ gitea_username }}"
+        url_password: "{{ gitea_password }}"
+        force_basic_auth: true
         validate_certs: false
         status_code: [201, 409]
         return_content: true
