@@ -7,7 +7,7 @@
   tasks:
     - name: Send request to AI API
       ansible.builtin.uri:
-        url: "https://c.ai.ansible.redhat.com/api/v0/ai/generations/"
+        url: "{{ input_lightspeed_url | default('https://c.ai.ansible.redhat.com/api/v0/ai/generations/') }}"
         method: POST
         headers:
           Content-Type: "application/json"
@@ -32,27 +32,3 @@
     - name: Display Ansible Playbook in YAML
       ansible.builtin.debug:
         msg: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
-
-    - name: Retrieve a repository from a distant location and make it available locally
-      ansible.scm.git_retrieve:
-        branch:
-          duplicate_detection: false
-          name: main
-        origin:
-          url: https://github.com/IPvSean/lightspeed_playbooks.git
-          token: "{{ github_token }}"
-        upstream:
-          url: https://github.com/IPvSean/lightspeed_playbooks.git
-          token: "{{ github_token }}"
-      register: repository
-
-    - name: Save formatted YAML response to file
-      ansible.builtin.copy:
-        content: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
-        dest: "{{ repository['path'] }}/lightspeed-response.yml"
-        mode: '0644'
-
-    - name: Publish the changes
-      ansible.scm.git_publish:
-        path: "{{ repository['path'] }}"
-        token: "{{ github_token }}"
