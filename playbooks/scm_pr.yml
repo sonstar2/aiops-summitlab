@@ -39,8 +39,8 @@
           user_name: "{{ gitea_username }}"
           password: "{{ gitea_password }}"
           _csrf: "{{ csrf_token }}"
-        status_code: [200, 302]
-        follow_redirects: safe
+        status_code: [200, 302, 303]
+        follow_redirects: all
         validate_certs: false
         return_content: true
       register: login_result
@@ -48,6 +48,11 @@
     - name: Debug login result
       ansible.builtin.debug:
         var: login_result
+
+    - name: Debug cookies from login
+      ansible.builtin.debug:
+        var: login_result.cookies_string
+      when: login_result.cookies_string is defined
 
     - name: Check if repository already exists
       ansible.builtin.uri:
@@ -98,7 +103,7 @@
           Cookie: "{{ login_result.cookies_string }}"
         validate_certs: false
       register: repo_create
-      when: repo_check.status == 404
+      when: repo_check is defined and repo_check.status == 404
 
     - name: Debug repository creation result
       ansible.builtin.debug:
@@ -123,3 +128,14 @@
           {% else %}
           Failed to create repository {{ repo_name }}.
           {% endif %}
+
+    - name: Clone the repository locally (optional)
+      ansible.builtin.git:
+        repo: "{{ gitea_url }}/{{ gitea_username }}/{{ repo_name }}.git"
+        dest: "/tmp/{{ repo_name }}"
+        clone: yes
+        update: yes
+        username: "{{ gitea_username }}"
+        password: "{{ gitea_password }}"
+      when: repo_check_final.status == 200
+      ignore_errors: yes
