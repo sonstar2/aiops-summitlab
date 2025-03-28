@@ -1,5 +1,5 @@
 ---
-- name: Interact with Ansible Lightspeed API
+- name: Interact with Ansible Lightspeed API and Generate Ansible Playbook
   hosts: localhost
   gather_facts: false
   vars:
