@@ -1,11 +1,11 @@
 ---
-- name: Push to specified Git repository
+- name: Create lightspeed_playbooks repository on Gitea
   hosts: localhost
   gather_facts: false
 
   tasks:
     - name: Set input vars
-      set_fact:
+      ansible.builtin.set_fact:
         gitea_url: "https://bastion.tnn56.sandbox1790.opentlc.com:488"  # Replace with your Gitea URL
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
@@ -19,6 +19,7 @@
         method: GET
         status_code: 200
         validate_certs: false
+        return_content: true
       register: login_page
 
     - name: Debug entire login_page var
@@ -44,6 +45,21 @@
         return_content: true
       register: login_result
 
+    - name: Debug login result
+      ansible.builtin.debug:
+        var: login_result
+
+    - name: Check if repository already exists
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/api/v1/repos/{{ gitea_username }}/{{ repo_name }}"
+        method: GET
+        headers:
+          Cookie: "{{ login_result.cookies_string }}"
+        status_code: [200, 404]
+        validate_certs: false
+      register: repo_check
+      failed_when: false
+
     - name: Get CSRF token for repository creation
       ansible.builtin.uri:
         url: "{{ gitea_url }}/repo/create"
@@ -53,13 +69,14 @@
         follow_redirects: all
         headers:
           Cookie: "{{ login_result.cookies_string }}"
+        return_content: true
       register: create_page
 
     - name: Extract repository creation CSRF token
       ansible.builtin.set_fact:
         repo_csrf_token: "{{ create_page.content | regex_search('name=\"_csrf\" value=\"([^\"]+)\"', '\\1') | first }}"
 
-    - name: Create repository
+    - name: Create repository if it doesn't exist
       ansible.builtin.uri:
         url: "{{ gitea_url }}/repo/create"
         method: POST
@@ -81,6 +98,12 @@
           Cookie: "{{ login_result.cookies_string }}"
         validate_certs: false
       register: repo_create
+      when: repo_check.status == 404
+
+    - name: Debug repository creation result
+      ansible.builtin.debug:
+        var: repo_create
+      when: repo_check.status == 404
 
     - name: Check if repository was created
       ansible.builtin.uri:
@@ -90,41 +113,13 @@
         headers:
           Cookie: "{{ login_result.cookies_string }}"
         validate_certs: false
-      register: repo_check
+      register: repo_check_final
 
     - name: Display repository creation status
       ansible.builtin.debug:
         msg: >
-          {% if repo_check.status == 200 %}
+          {% if repo_check_final.status == 200 %}
           Repository {{ repo_name }} created or already exists.
           {% else %}
           Failed to create repository {{ repo_name }}.
           {% endif %}
-
-    # - name: Display Ansible Playbook in YAML
-    #   ansible.builtin.debug:
-    #     msg: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
-
-    # - name: Retrieve a repository from a distant location and make it available locally
-    #   ansible.scm.git_retrieve:
-    #     branch:
-    #       duplicate_detection: false
-    #       name: main
-    #     origin:
-    #       url: https://github.com/IPvSean/lightspeed_playbooks.git
-    #       token: "{{ github_token }}"
-    #     upstream:
-    #       url: https://github.com/IPvSean/lightspeed_playbooks.git
-    #       token: "{{ github_token }}"
-    #   register: repository
-
-    # - name: Save formatted YAML response to file
-    #   ansible.builtin.copy:
-    #     content: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
-    #     dest: "{{ repository['path'] }}/lightspeed-response.yml"
-    #     mode: '0644'
-
-    # - name: Publish the changes
-    #   ansible.scm.git_publish:
-    #     path: "{{ repository['path'] }}"
-    #     token: "{{ github_token }}"
