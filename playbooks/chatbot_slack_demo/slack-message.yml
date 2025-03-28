@@ -79,9 +79,7 @@
       community.general.slack:
         token: "{{ token }}"
         msg: |
-            ```
             {{ slack_message }}
-            ```
         channel: '#ansiblefest-demo'
         color: good
         username: 'AnsibleFest-bot'
