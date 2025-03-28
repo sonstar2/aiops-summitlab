@@ -48,7 +48,7 @@
         body:
           name: "{{ repo_name }}"
           description: "{{ repo_description }}"
-          private: true
+          private: false
           auto_init: false
         url_username: "{{ gitea_username }}"
         url_password: "{{ gitea_password }}"
