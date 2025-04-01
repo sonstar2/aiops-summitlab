@@ -102,6 +102,9 @@
       ansible.builtin.set_fact:
         gitea_token: "{{ token_create_api }}"
 
+    - name: Save Gitea Token
+      ansible.builtin.set_fact:
+        gitea_token: "{{ gitea_token.json.sha1 }}"
 
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
