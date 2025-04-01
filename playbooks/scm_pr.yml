@@ -62,6 +62,18 @@
       ansible.builtin.debug:
         var: repo_create_api.json
 
+
+    - name: Delete existing token with name "AnsibleToken" (if it exists)
+      ansible.builtin.uri:
+        url: "{{ gitea_url }}/api/v1/users/{{ gitea_username }}/tokens/AnsibleToken
+        method: DELETE
+        url_username: "{{ gitea_username }}"
+        url_password: "{{ gitea_password }}"
+        force_basic_auth: true
+        validate_certs: false
+        status_code: 204
+      ignore_errors: true
+
     - name: Create Gitea Personal Access Token
       ansible.builtin.uri:
         url: "{{ gitea_url }}/api/v1/users/{{ gitea_username }}/tokens"
@@ -87,7 +99,7 @@
       register: token_create_api
 
     - name: Save Gitea Token
-      set_fact:
+      ansible.builtin.set_fact:
         gitea_token: "{{ token_create_api }}"
 
 
