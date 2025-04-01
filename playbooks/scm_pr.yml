@@ -108,6 +108,7 @@
 
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
+        token: "{{ gitea_token.json.sha1 }}"
         branch:
           duplicate_detection: false
           name: main
