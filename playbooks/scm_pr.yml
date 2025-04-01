@@ -70,7 +70,14 @@
         body:
           name: "AnsibleToken"
           scopes:
-            - repo  # This line **must be present and properly indented**
+            - "write:activitypub",
+            - "write:misc",
+            - "write:notification",
+            - "write:organization",
+            - "write:package",
+            - "write:issue",
+            - "write:repository",
+            - "write:user"
         url_username: "{{ gitea_username }}"
         url_password: "{{ gitea_password }}"
         force_basic_auth: true
