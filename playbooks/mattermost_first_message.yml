@@ -13,6 +13,10 @@
         msg: "Both Mattermost Instance and token must be set!"
       when: mattermost_instance | default('') | trim == '' or mattermost_token | default('') | trim == ''
 
+    - name: Set systemd facts
+      ansible.builtin.set_fact:
+        linux_service: "{{ input_linux_service | default('httpd') }}"
+
     - name: Send error notification message via Mattermost
       community.general.mattermost:
         url: "{{ mattermost_instance }}"
