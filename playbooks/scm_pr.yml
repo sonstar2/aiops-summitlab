@@ -65,7 +65,7 @@
 
     - name: Delete existing token with name "AnsibleToken" (if it exists)
       ansible.builtin.uri:
-        url: "{{ gitea_url }}/api/v1/users/{{ gitea_username }}/tokens/AnsibleToken
+        url: "{{ gitea_url }}/api/v1/users/{{ gitea_username }}/tokens/AnsibleToken"
         method: DELETE
         url_username: "{{ gitea_username }}"
         url_password: "{{ gitea_password }}"
