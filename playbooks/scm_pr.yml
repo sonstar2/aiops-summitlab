@@ -6,7 +6,7 @@
   tasks:
     - name: Set input vars
       ansible.builtin.set_fact:
-        gitea_url: "https://bastion.tnn56.sandbox1790.opentlc.com:488"  # Replace with your Gitea URL
+        gitea_url: "https://bastion.cj4kg.sandbox897.opentlc.com:488"  # Replace with your Gitea URL
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
         gitea_username: "{{ input_gitea_username | default('lab-user') }}"
