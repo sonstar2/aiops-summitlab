@@ -104,18 +104,16 @@
 
     - name: Save Gitea Token
       ansible.builtin.set_fact:
-        gitea_token: "{{ gitea_token.json.sha1 }}"
+        gitea_token_sha1: "{{ gitea_token.json.sha1 }}"
 
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
-        token: "{{ gitea_token }}"
         branch:
           duplicate_detection: false
           name: main
         origin:
           url: "{{ gitea_url }}/lab-user/{{ repo_name }}.git"
-        upstream:
-          url: https://github.com/IPvSean/lightspeed_playbooks.git
+          token: "{{ gitea_token_sha1 }}"
       register: repository
 
     # - name: Save formatted YAML response to file
