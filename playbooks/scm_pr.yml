@@ -68,10 +68,9 @@
         method: POST
         body_format: json
         body:
-          name: "AnsibleToken"  # Name of the token
-          # Remove the scopes if not needed or adjust accordingly
-          # scopes:
-          #   - "repo"
+          name: "AnsibleToken"
+          scopes:
+            - repo  # This line **must be present and properly indented**
         url_username: "{{ gitea_username }}"
         url_password: "{{ gitea_password }}"
         force_basic_auth: true
