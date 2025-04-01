@@ -10,7 +10,7 @@
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
         gitea_username: "{{ input_gitea_username | default('lab-user') }}"
-        gitea_password: "{{ input_gitea_password | default('Mjg0MDM4_1') }}"
+        gitea_password: "{{ input_gitea_password | default('MjQ5NDQx_1') }}"
 
     - name: Get authentication cookie
       ansible.builtin.uri:
