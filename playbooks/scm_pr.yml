@@ -70,13 +70,13 @@
         body:
           name: "AnsibleToken"
           scopes:
-            - "write:activitypub",
-            - "write:misc",
-            - "write:notification",
-            - "write:organization",
-            - "write:package",
-            - "write:issue",
-            - "write:repository",
+            - "write:activitypub"
+            - "write:misc"
+            - "write:notification"
+            - "write:organization"
+            - "write:package"
+            - "write:issue"
+            - "write:repository"
             - "write:user"
         url_username: "{{ gitea_username }}"
         url_password: "{{ gitea_password }}"
