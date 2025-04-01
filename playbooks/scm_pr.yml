@@ -69,8 +69,9 @@
         body_format: json
         body:
           name: "AnsibleToken"  # Name of the token
-          scopes:
-            - "repo"  # You can specify scopes depending on the permissions you need
+          # Remove the scopes if not needed or adjust accordingly
+          # scopes:
+          #   - "repo"
         url_username: "{{ gitea_username }}"
         url_password: "{{ gitea_password }}"
         force_basic_auth: true
