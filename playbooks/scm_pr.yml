@@ -88,7 +88,7 @@
 
     - name: Save Gitea Token
       set_fact:
-        gitea_token: "{{ token_create_api.json.token }}"
+        gitea_token: "{{ token_create_api }}"
 
 
     - name: Retrieve a repository from a distant location and make it available locally
