@@ -44,17 +44,24 @@
       ansible.builtin.debug:
         msg: "{{ systemd_log_output }}"
 
+    - name: Escape newlines in systemd logs
+      ansible.builtin.set_fact:
+        systemd_log_output_escaped: "{{ systemd_log_output | regex_replace('(\r?\n)', '\\\\n') }}"
+
     - name: Set stats for next controller job
       ansible.builtin.set_stats:
         data:
-          gpt_prompt: |
+          slack_message: |
             ### Instructions:
             We have an issue on our Red Hat Enterprise Linux server with the {{ linux_service }} service.
 
             The {{ linux_service }} service will not start.
-            Please help me troubleshoot this issue and get the service back online.
 
             Here are recent error logs: {{ systemd_log_output }}
 
-            ### Response:
+            ###
           max_tokens: 2000
+          gpt_prompt: >-
+            \n### Instructions:\nA system service is failing. Below are the logs. Provide a single, concise fix instruction (1-2 lines).\n
+            \n### Logs:\n{{ systemd_log_output_escaped }}\n
+            \n### Fix:\n

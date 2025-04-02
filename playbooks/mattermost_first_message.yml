@@ -30,10 +30,10 @@
                 value: "{{ linux_service | capitalize }} error detected"
                 short: true
               - title: Details
-                value: "{{ gpt_prompt }}"
+                value: "{{ slack_message }}"
                 short: true
       delegate_to: localhost
-      when: (gpt_prompt | default('') | length) > 0
+      when: (slack_message | default('') | length) > 0
 
     - name: Send success notification message via Mattermost
       community.general.mattermost:
@@ -51,4 +51,4 @@
                 value: "HTTP service is running fine"
                 short: true
       delegate_to: localhost
-      when: (gpt_prompt | default('') | length) == 0
+      when: (slack_message | default('') | length) == 0
