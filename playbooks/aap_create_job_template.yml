@@ -13,7 +13,7 @@
         msg: "The LLM suggests: {{ gpt_generated_prompt }}"
 
     - name: Create Job Template
-      awx.awx.job_template:
+      ansible.controller.job_template:
         name: "Lightspeed Generate"
         job_type: "run"
         inventory: "{{ input_inventory | default('Demo Inventory') }}"
@@ -22,5 +22,5 @@
         credential: "{{ input_credential | default('AAP') }}"
         survey_enabled: true
         survey_spec: "{{ lookup('template', playbook_dir + '/templates/survey.j2') }}"
-        validate_certs: false
+        validate_certs: true
         execution_environment: "Default execution environment"
