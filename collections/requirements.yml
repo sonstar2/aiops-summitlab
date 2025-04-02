@@ -5,3 +5,4 @@ collections:
     version: main
   - name: containers.podman
   - name: community.general
+  - name: awx.awx

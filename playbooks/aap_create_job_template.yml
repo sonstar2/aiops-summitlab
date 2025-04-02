@@ -13,7 +13,7 @@
         msg: "The LLM suggests: {{ gpt_generated_prompt }}"
 
     - name: Create Job Template
-      ansible.controller.job_template:
+      awx.awx.job_template:
         name: "Lightspeed Generate"
         job_type: "run"
         inventory: "{{ input_inventory | default('Demo Inventory') }}"
