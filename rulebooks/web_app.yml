@@ -13,7 +13,7 @@
       action:
         run_workflow_template:
           organization: "Default"
-          name: "Workflow One"
+          name: "Generate Remediation Prompt"
 
     - name: show event messages
       condition: event.body.message is defined
