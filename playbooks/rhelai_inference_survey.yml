@@ -41,4 +41,4 @@
 
     - name: Debug gpt response
       ansible.builtin.debug:
-        var: "{{ gpt_response }}"
+        var: gpt_response
