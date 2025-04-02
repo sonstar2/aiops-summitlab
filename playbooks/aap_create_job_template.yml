@@ -4,6 +4,13 @@
   connection: local
   gather_facts: false
   tasks:
+    - name: Set a fact with the LLM text
+      ansible.builtin.set_fact:
+        gpt_generated_prompt: "{{ gpt_response.json.choices[0].text }}"
+
+    - name: Show the LLM response text
+      ansible.builtin.debug:
+        msg: "The LLM suggests: {{ gpt_generated_prompt }}"
 
     - name: Create Job Template
       ansible.controller.job_template:
