@@ -60,7 +60,7 @@
             Here are recent error logs: {{ systemd_log_output }}
 
             ###
-          max_tokens: 2000
+          max_tokens: 50
           gpt_prompt: >-
             \n### Instructions:\nA system service is failing. Below are the logs. Provide a single, concise fix instruction (1-2 lines).\n
             \n### Logs:\n{{ systemd_log_output_escaped }}\n
