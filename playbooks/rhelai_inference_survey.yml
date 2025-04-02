@@ -38,3 +38,7 @@
       ansible.builtin.set_stats:
         data:
           gpt_response: "{{ gpt_response }}"
+
+    - name: Debug gpt response
+      ansible.builtin.debug:
+        var: "{{ gpt_response }}"
