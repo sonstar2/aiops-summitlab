@@ -25,6 +25,11 @@
       ansible.builtin.set_fact:
         lightspeed_playbook: "{{ response.json.playbook | from_yaml }}"
 
+    - name: Set stat on lightspeed_playbook
+      ansible.builtin.set_stats:
+        data:
+          lightspeed_playbook: "{{ lightspeed_playbook }}"
+
     - name: Display Ansible Playbook in JSON
       ansible.builtin.debug:
         msg: "{{ lightspeed_playbook }}"
