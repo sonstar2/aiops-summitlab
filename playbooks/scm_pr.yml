@@ -1,6 +1,7 @@
 - name: Create lightspeed_playbooks repository on Gitea
   hosts: localhost
   gather_facts: false
+
   tasks:
     - name: Set input vars
       ansible.builtin.set_fact:
@@ -26,3 +27,4 @@
     - name: Publish the changes
       ansible.scm.git_publish:
         path: "{{ repository['path'] }}"
+        token: "{{ github_token }}"
