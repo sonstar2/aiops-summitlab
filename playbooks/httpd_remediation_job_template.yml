@@ -11,7 +11,7 @@
         inventory: "{{ input_inventory | default('lab-inventory') }}"
         project: "{{ input_project | default('Lightspeed-Playbooks') }}"
         playbook: "{{ input_playbook | default('lightspeed-response.yml') }}"
-        credential: "{{ input_credential | default('AAP') }}"
+        credential: "{{ input_credential | default('lab-credential') }}"
         validate_certs: true
         execution_environment: "Default execution environment"
         limit: "node1"
