@@ -21,7 +21,7 @@
       register: repository        
     - name: Save formatted YAML response to file
       ansible.builtin.copy:
-        content: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
+        content: "{{ lightspeed_playbook | to_nice_yaml() }}"
         dest: "{{ repository['path'] }}/lightspeed-response.yml"
         mode: '0644'
     - name: Publish the changes
