@@ -27,4 +27,4 @@
     - name: Publish the changes
       ansible.scm.git_publish:
         path: "{{ repository['path'] }}"
-        token: "{{ github_token }}"
+        token: "{{ gitea_token_sha1 }}"

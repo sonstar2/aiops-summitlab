@@ -19,7 +19,9 @@
         inventory: "{{ input_inventory | default('Demo Inventory') }}"
         project: "{{ input_project | default('AI-EDA') }}"
         playbook: "{{ input_playbook | default('playbooks/lightspeed_generate.yml') }}"
-        credential: "{{ input_credential | default('AAP') }}"
+        credentials:
+          - "{{ input_credential | default('AAP') }}"
+          - "{{ vault_credential | default('ansible-vault') }}"
         survey_enabled: true
         survey_spec: "{{ lookup('template', playbook_dir + '/templates/survey.j2') }}"
         validate_certs: true
