@@ -5,11 +5,8 @@
   tasks:
     - name: Set input vars
       ansible.builtin.set_fact:
-        gitea_url: "https://bastion.cj4kg.sandbox897.opentlc.com:488"  # Replace with your Gitea URL
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
-        gitea_username: "{{ input_gitea_username | default('lab-user') }}"
-        gitea_password: "{{ input_gitea_password | default('MjQ5NDQx_1') }}"
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
         branch:
@@ -17,7 +14,7 @@
           name: main
         origin:
           url: "{{ gitea_url }}/lab-user/{{ repo_name }}.git"
-          token: "{{ gitea_token_sha1 }}"
+          token: "{{ gitea_token }}"
       register: repository        
     - name: Save formatted YAML response to file
       ansible.builtin.copy:
@@ -27,4 +24,4 @@
     - name: Publish the changes
       ansible.scm.git_publish:
         path: "{{ repository['path'] }}"
-        token: "{{ gitea_token_sha1 }}"
+        token: "{{ gitea_token }}"
