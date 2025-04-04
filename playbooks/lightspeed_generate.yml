@@ -7,7 +7,7 @@
   tasks:
     - name: Set vaulted token
       ansible.builtin.set_fact
-        lightspeed_wca_token: |
+        lightspeed_wca_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           31326239386334643138626532643162376537393064643933653330306438633632323166356566
           6439393932306536363037393466613362633636343931330a386232363331376534353865373935
