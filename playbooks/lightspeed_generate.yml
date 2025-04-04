@@ -5,6 +5,9 @@
   vars:
     lightspeed_prompt: "Remove line that contains InvalidDirectiveHere from /etc/httpd/conf/httpd.conf and restart httpd"
   tasks:
+    - name: Check decrypted token
+      debug:
+        msg: "{{ lightspeed_wca_token }}"
     - name: Send request to AI API
       ansible.builtin.uri:
         url: "{{ input_lightspeed_url | default('https://c.ai.ansible.redhat.com/api/v0/ai/generations/') }}"
