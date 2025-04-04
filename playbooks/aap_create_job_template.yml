@@ -14,7 +14,7 @@
 
     - name: Create Job Template
       ansible.controller.job_template:
-        name: "Lightspeed Generate"
+        name: "🧠 Lightspeed Remediation Playbook Generator"
         job_type: "run"
         inventory: "{{ input_inventory | default('Demo Inventory') }}"
         project: "{{ input_project | default('AI-EDA') }}"
