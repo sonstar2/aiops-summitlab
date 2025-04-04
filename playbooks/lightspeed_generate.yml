@@ -5,7 +5,7 @@
   tasks:
     - name: Include vars
       ansible.builtin.include_vars:
-        file: "ls_vars.yml"
+        file: "vars/ls_vars.yml"
     - name: Send request to AI API
       ansible.builtin.uri:
         url: "{{ input_lightspeed_url | default('https://c.ai.ansible.redhat.com/api/v0/ai/generations/') }}"
