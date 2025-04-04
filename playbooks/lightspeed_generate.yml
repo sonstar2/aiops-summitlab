@@ -16,7 +16,6 @@
         body:
           text: "{{ lightspeed_prompt }}"
       register: response
-      no_log: true
 
     - name: Display API response
       ansible.builtin.debug:
