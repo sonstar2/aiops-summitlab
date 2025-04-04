@@ -13,7 +13,7 @@
       action:
         run_workflow_template:
           organization: "Default"
-          name: "Generate Remediation Prompt"
+          name: "{{ workflow_template_name | default('Generate Lightspeed Prompt') }}"
 
     - name: show event messages
       condition: event.body.message is defined
