@@ -26,3 +26,5 @@
         survey_spec: "{{ lookup('template', playbook_dir + '/templates/survey.j2') }}"
         validate_certs: true
         execution_environment: "Default execution environment"
+        extra_vars:
+          lightspeed_wca_token: "{{ lightspeed_wca_token }}"
