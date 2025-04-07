@@ -7,7 +7,6 @@
       ansible.builtin.set_fact:
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
-
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
         branch:
@@ -17,6 +16,7 @@
           url: "{{ gitea_url }}/lab-user/{{ repo_name }}.git"
           token: "{{ gitea_token }}"
       register: repository
+
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
@@ -29,7 +29,3 @@
       ansible.scm.git_publish:
         path: "{{ repository['path'] }}"
         token: "{{ gitea_token }}"
-        - name: Publish the changes
-          ansible.scm.git_publish:
-            path: "{{ repository['path'] }}"
-            token: "{{ gitea_token }}"
