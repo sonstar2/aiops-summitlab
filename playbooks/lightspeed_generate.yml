@@ -29,7 +29,7 @@
     - name: Set stat on lightspeed_playbook
       ansible.builtin.set_stats:
         data:
-          lightspeed_playbook: "{{ lightspeed_playbook }}"
+          lightspeed_playbook: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
 
     - name: Display Ansible Playbook in JSON
       ansible.builtin.debug:
