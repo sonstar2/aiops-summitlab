@@ -14,5 +14,6 @@
         credential: "{{ input_credential | default('lab-credential') }}"
         validate_certs: true
         execution_environment: "Default execution environment"
-        limit: "node1"
+        become_enabled: true
+
 
