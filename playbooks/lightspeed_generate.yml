@@ -37,4 +37,4 @@
 
     - name: Display Ansible Playbook in YAML
       ansible.builtin.debug:
-        msg: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) }}"
+        msg: "{{ lightspeed_playbook_raw | to_nice_yaml(sort_keys=False) }}"
