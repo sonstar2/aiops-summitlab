@@ -25,11 +25,11 @@
         dest: "{{ repository['path'] }}/lightspeed-response.yml"
         mode: '0644'
 
-- name: Publish the changes
-  ansible.scm.git_publish:
-    path: "{{ repository['path'] }}"
-    token: "{{ gitea_token }}"
     - name: Publish the changes
       ansible.scm.git_publish:
         path: "{{ repository['path'] }}"
         token: "{{ gitea_token }}"
+        - name: Publish the changes
+          ansible.scm.git_publish:
+            path: "{{ repository['path'] }}"
+            token: "{{ gitea_token }}"
