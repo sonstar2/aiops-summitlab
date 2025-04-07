@@ -21,7 +21,7 @@
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
       ansible.builtin.copy:
-        content: "{{ lightspeed_playbook_raw }}"
+        content: "{{ lightspeed_playbook }}"
         dest: "{{ repository['path'] }}/lightspeed-response.yml"
         mode: '0644'
 
