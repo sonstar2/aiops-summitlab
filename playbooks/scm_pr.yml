@@ -7,7 +7,7 @@
       ansible.builtin.set_fact:
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
-        
+
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
         branch:
@@ -18,16 +18,17 @@
           token: "{{ gitea_token }}"
       register: repository
 
-    - name: Serialize and deserialize to preserve key order
-      ansible.builtin.set_fact:
-        lightspeed_playbook_ordered: "{{ lightspeed_playbook | to_nice_yaml(sort_keys=False) | from_yaml }}"
-
-    - name: Save formatted YAML response to file
+    # Don't deserialize – just save the raw YAML string
+    - name: Save formatted YAML response to file (preserve key order)
       ansible.builtin.copy:
-        content: "{{ lightspeed_playbook_ordered | to_nice_yaml(sort_keys=False) }}"
+        content: "{{ lightspeed_playbook_raw }}"
         dest: "{{ repository['path'] }}/lightspeed-response.yml"
         mode: '0644'
 
+- name: Publish the changes
+  ansible.scm.git_publish:
+    path: "{{ repository['path'] }}"
+    token: "{{ gitea_token }}"
     - name: Publish the changes
       ansible.scm.git_publish:
         path: "{{ repository['path'] }}"

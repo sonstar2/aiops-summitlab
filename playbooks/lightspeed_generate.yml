@@ -22,18 +22,18 @@
       ansible.builtin.debug:
         msg: "{{ response.json }}"
 
-    - name: Set fact for Ansible Lightspeed generated playbook
+    - name: Preserve raw YAML playbook (string)
       ansible.builtin.set_fact:
-        lightspeed_playbook: "{{ response.json.playbook | from_yaml }}"
+        lightspeed_playbook_raw: "{{ response.json.playbook }}"
 
-    - name: Set stat on lightspeed_playbook
+    - name: Set stat on raw playbook YAML
       ansible.builtin.set_stats:
         data:
-          lightspeed_playbook: "{{ lightspeed_playbook }}"
+          lightspeed_playbook: "{{ lightspeed_playbook_raw }}"
 
     - name: Display Ansible Playbook in JSON
       ansible.builtin.debug:
-        msg: "{{ lightspeed_playbook }}"
+        msg: "{{ lightspeed_playbook_raw }}"
 
     - name: Display Ansible Playbook in YAML
       ansible.builtin.debug:
