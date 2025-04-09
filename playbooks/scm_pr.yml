@@ -33,6 +33,11 @@
       ansible.builtin.set_fact:
         lightspeed_playbook: "{{ parsed_playbook | to_nice_yaml(indent=2, sort_keys=False) }}"
 
+    - name: Update stat with the final version
+      ansible.builtin.set_stats:
+        data:
+          lightspeed_playbook: "{{ lightspeed_playbook }}"
+
     - name: Debug converted playbook string
       ansible.builtin.debug:
         msg: "{{ lightspeed_playbook }}"
