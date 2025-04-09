@@ -33,6 +33,10 @@
       ansible.builtin.set_fact:
         lightspeed_playbook: "{{ parsed_playbook | to_nice_yaml(indent=2, sort_keys=False) }}"
 
+    - name: Debug converted playbook string
+      ansible.builtin.debug:
+        msg: "{{ lightspeed_playbook }}"
+
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
       ansible.builtin.copy:
