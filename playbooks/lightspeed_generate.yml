@@ -26,26 +26,10 @@
       ansible.builtin.set_fact:
         lightspeed_playbook_raw: "{{ response.json.playbook }}"
 
-    - name: Ensure hosts is set to 'all' unless already 'all' or 'node1'
-      ansible.builtin.set_fact:
-        lightspeed_playbook_patched: >-
-          {{
-            (lightspeed_playbook_raw | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all'))
-            if (
-              'hosts: all' not in lightspeed_playbook_raw
-              and 'hosts: node1' not in lightspeed_playbook_raw
-            )
-            else lightspeed_playbook_raw
-          }}
-
-    - name: Parse patched YAML into a variable
-      ansible.builtin.set_fact:
-        lightspeed_playbook: "{{ lightspeed_playbook_patched | from_yaml }}"
-
-    - name: Set stat on lightspeed_playbook
+    - name: Set stat on raw playbook YAML
       ansible.builtin.set_stats:
         data:
-          lightspeed_playbook: "{{ lightspeed_playbook }}"
+          lightspeed_playbook: "{{ lightspeed_playbook_raw }}"
 
     - name: Display Ansible Playbook in JSON
       ansible.builtin.debug:

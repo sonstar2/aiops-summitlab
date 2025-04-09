@@ -16,6 +16,18 @@
           url: "{{ gitea_url }}/lab-user/{{ repo_name }}.git"
           token: "{{ gitea_token }}"
       register: repository
+  
+    - name: Patch 'hosts' line in raw YAML if needed
+      ansible.builtin.set_fact:
+        lightspeed_playbook: >-
+          {{
+            (lightspeed_playbook | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all'))
+            if (
+              'hosts: all' not in lightspeed_playbook
+              and 'hosts: node1' not in lightspeed_playbook
+            )
+            else lightspeed_playbook
+          }}
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
