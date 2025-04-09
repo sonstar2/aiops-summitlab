@@ -17,6 +17,10 @@
           url: "{{ gitea_url }}/lab-user/{{ repo_name }}.git"
           token: "{{ gitea_token }}"
       register: repository
+
+    - name: Split playbook into lines
+      ansible.builtin.set_fact:
+        lightspeed_playbook_lines: "{{ lightspeed_playbook.split('\n') }}"
   
     - name: Update hosts line if needed
       ansible.builtin.set_fact:
