@@ -65,7 +65,7 @@
           rca_prompt: >-
             ### Instructions:
             A system service is failing on node1. Analyze the logs below and
-            generate a Root Cause Analysis (RCA) in 2-3 sentences.
+            generate a Root Cause Analysis (RCA) in detail.
 
             ### Logs:
             {{ systemd_log_output_escaped }}
