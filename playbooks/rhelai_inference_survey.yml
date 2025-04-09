@@ -48,7 +48,7 @@
         body_format: json
         return_content: true
         status_code: 200
-        timeout: 90
+        timeout: 120
       register: rca_response
 
     - name: Check if response is JSON and debug output
