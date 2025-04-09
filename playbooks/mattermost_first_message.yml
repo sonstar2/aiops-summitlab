@@ -35,6 +35,21 @@
       delegate_to: localhost
       when: (slack_message | default('') | length) > 0
 
+    - name: Send RCA insights from RHEL AI to Mattermost
+      community.general.mattermost:
+        url: "{{ mattermost_instance }}"
+        api_key: "{{ mattermost_token }}"
+        attachments:
+          - text: "AI-Generated RCA from RedHat AI"
+            color: "#ffa500"
+            title: "Root Cause Analysis for {{ linux_service | capitalize }}"
+            fields:
+              - title: RCA Summary
+                value: "{{ rca_response.json.choices[0].text | default('No RCA available') | trim }}"
+                short: false
+      delegate_to: localhost
+      when: (rca_response.json.choices[0].text | default('') | length) > 0
+
     - name: Send success notification message via Mattermost
       community.general.mattermost:
         url: "{{ mattermost_instance }}"
