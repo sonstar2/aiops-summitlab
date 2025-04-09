@@ -52,14 +52,11 @@
       ansible.builtin.set_stats:
         data:
           slack_message: |
-            ### Instructions:
             We have an issue on our Red Hat Enterprise Linux server with the {{ linux_service }} service.
 
             The {{ linux_service }} service will not start.
 
             Here are recent error logs: {{ systemd_log_output }}
-
-            ###
           max_tokens: 50
           gpt_prompt: >-
             \n### Instructions:\nA system service is failing on node1. Below are the logs. Provide a single, concise fix instruction (1-2 lines), add restart of service.\n
