@@ -7,6 +7,7 @@
       ansible.builtin.set_fact:
         repo_name: "{{ input_repo_name | default('lightspeed_playbooks') }}"
         repo_description: "{{ input_repo_description | default('Repository for Lightspeed Ansible Playbooks') }}"
+
     - name: Retrieve a repository from a distant location and make it available locally
       ansible.scm.git_retrieve:
         branch:
@@ -17,20 +18,15 @@
           token: "{{ gitea_token }}"
       register: repository
   
-    - name: Update 'hosts' to 'all' if it's not already 'all' or 'node1'
+    - name: Update hosts line if needed
       ansible.builtin.set_fact:
         lightspeed_playbook: >-
           {{
-            lightspeed_playbook
-            if (lightspeed_playbook is search('(?m)^\\s*hosts:\\s*(all|node1)\\s*$'))
-            else (
-              '\n'.join([
-                line if not line.strip().startswith('hosts:')
-                else '  hosts: all'
-                for line in lightspeed_playbook.split('\n')
-              ])
-            )
+            lightspeed_playbook_lines
+            | map('regex_replace', '^(\\s*)hosts:.*$', '\\1hosts: all')
+            | join('\n')
           }}
+      when: lightspeed_playbook is not search('(?m)^\\s*hosts:\\s*(all|node1)\\s*$')
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
