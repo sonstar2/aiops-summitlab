@@ -62,6 +62,6 @@
             ###
           max_tokens: 50
           gpt_prompt: >-
-            \n### Instructions:\nA system service is failing on node1. Below are the logs. Provide a single, concise fix instruction (1-2 lines), add restart of service.\n
+            \n### Instructions:\nA system service is failing. Below are the logs. Provide a single, concise fix instruction (1-2 lines), add restart of service.\n
             \n### Logs:\n{{ systemd_log_output_escaped }}\n
             \n### Fix:\n
