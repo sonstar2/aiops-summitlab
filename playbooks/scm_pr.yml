@@ -23,7 +23,13 @@
           {{
             lightspeed_playbook
             if (lightspeed_playbook is search('(?m)^\\s*hosts:\\s*(all|node1)\\s*$'))
-            else (lightspeed_playbook | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all'))
+            else (
+              '\n'.join([
+                line if not line.strip().startswith('hosts:')
+                else '  hosts: all'
+                for line in lightspeed_playbook.split('\n')
+              ])
+            )
           }}
 
     # Don't deserialize – just save the raw YAML string
