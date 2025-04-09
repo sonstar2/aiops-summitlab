@@ -18,8 +18,13 @@
       register: repository
 
     - name: Force hosts to "all" in Lightspeed playbook unless already 'all' or 'node1'
-      ansible.builtin.set_fact:
-        lightspeed_playbook: "{{ lightspeed_playbook | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all') }}"
+      ansible.builtin.set_stats:
+        data:
+          lightspeed_playbook: "{{ lightspeed_playbook | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all') }}"
+      when: >
+      (lightspeed_playbook is string) and
+      ('hosts: all' not in lightspeed_playbook) and
+      ('hosts: node1' not in lightspeed_playbook)
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
