@@ -22,15 +22,15 @@
       ansible.builtin.set_fact:
         lightspeed_playbook_lines: "{{ lightspeed_playbook.split('\n') }}"
   
-    - name: Update hosts line if needed
-      ansible.builtin.set_fact:
-        lightspeed_playbook: >-
+    - name: Fix hosts value in Lightspeed playbook
+      vars:
+        fixed_lines: >-
           {{
-            lightspeed_playbook_lines
-            | map('regex_replace', '^(\\s*)hosts:.*$', '\\1hosts: all')
-            | join('\n')
+            lightspeed_playbook.split('\n') | map('regex_replace', '^(\\s*)hosts:\\s*nodes$', '\\1hosts: all') | list
           }}
-      when: lightspeed_playbook is not search('(?m)^\\s*hosts:\\s*(all|node1)\\s*$')
+      ansible.builtin.set_fact:
+        lightspeed_playbook: "{{ fixed_lines | join('\n') }}"
+      when: lightspeed_playbook is search('(?m)^\\s*hosts:\\s*nodes\\s*$')
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
