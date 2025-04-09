@@ -17,8 +17,8 @@
           url: "{{ gitea_url }}/lab-user/{{ repo_name }}.git"
           token: "{{ gitea_token }}"
       register: repository
-      
-    # Safety guard: Ensure AI-generated playbook is compatible with target inventory
+
+    # Safety guard - Ensure AI-generated playbook is compatible with target inventory
     - name: Ensure execution readiness for AI-generated playbook
       block:
 
