@@ -40,13 +40,16 @@
         url: "{{ mattermost_instance }}"
         api_key: "{{ mattermost_token }}"
         attachments:
-          - text: "AI-Generated RCA from RedHat AI"
+          - text: "!!!!!! RCA INSIGHT !!!!!!"
             color: "#ffa500"
-            title: "Root Cause Analysis for {{ linux_service | capitalize }}"
+            title: "{{ linux_service | capitalize }} Root Cause Identified"
             fields:
-              - title: RCA Summary
+              - title: RCA of {{ linux_service | capitalize }} error detected
+                value: "AI-Generated Explanation"
+                short: true
+              - title: Details
                 value: "{{ rca_response.json.choices[0].text | default('No RCA available') | trim }}"
-                short: false
+                short: true
       delegate_to: localhost
       when: (rca_response.json.choices[0].text | default('') | length) > 0
 
