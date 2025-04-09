@@ -17,16 +17,13 @@
           token: "{{ gitea_token }}"
       register: repository
   
-    - name: Patch 'hosts' line in raw YAML if needed
+    - name: Update 'hosts' to 'all' if it's not already 'all' or 'node1'
       ansible.builtin.set_fact:
         lightspeed_playbook: >-
           {{
-            (lightspeed_playbook | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all'))
-            if (
-              'hosts: all' not in lightspeed_playbook
-              and 'hosts: node1' not in lightspeed_playbook
-            )
-            else lightspeed_playbook
+            lightspeed_playbook
+            if (lightspeed_playbook is search('(?m)^\\s*hosts:\\s*(all|node1)\\s*$'))
+            else (lightspeed_playbook | regex_replace('(?m)^\\s*hosts:\\s*.*$', '  hosts: all'))
           }}
 
     # Don't deserialize – just save the raw YAML string
