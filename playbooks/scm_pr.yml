@@ -31,21 +31,17 @@
 
     - name: Convert back to string (preserve formatting)
       ansible.builtin.set_fact:
-        lightspeed_playbook: "{{ parsed_playbook | to_nice_yaml(indent=2, sort_keys=False) }}"
+        lightspeed_playbook_parsed: "{{ parsed_playbook | to_nice_yaml(indent=2, sort_keys=False) }}"
 
     - name: Update stat with the final version
       ansible.builtin.set_stats:
         data:
-          lightspeed_playbook: "{{ lightspeed_playbook }}"
-
-    - name: Debug converted playbook string
-      ansible.builtin.debug:
-        msg: "{{ lightspeed_playbook }}"
+          lightspeed_playbook_parsed: "{{ lightspeed_playbook }}"
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
       ansible.builtin.copy:
-        content: "{{ lightspeed_playbook }}"
+        content: "{{ lightspeed_playbook_parsed }}"
         dest: "{{ repository['path'] }}/lightspeed-response.yml"
         mode: '0644'
 
