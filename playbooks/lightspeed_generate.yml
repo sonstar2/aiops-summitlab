@@ -38,10 +38,14 @@
             else lightspeed_playbook_raw
           }}
 
-    - name: Set stat on raw playbook YAML
+    - name: Parse patched YAML into a variable
+      ansible.builtin.set_fact:
+        lightspeed_playbook: "{{ lightspeed_playbook_patched | from_yaml }}"
+
+    - name: Set stat on lightspeed_playbook
       ansible.builtin.set_stats:
         data:
-          lightspeed_playbook: "{{ lightspeed_playbook_raw }}"
+          lightspeed_playbook: "{{ lightspeed_playbook }}"
 
     - name: Display Ansible Playbook in JSON
       ansible.builtin.debug:
