@@ -18,19 +18,20 @@
           token: "{{ gitea_token }}"
       register: repository
 
-    - name: Split playbook into lines
+    - name: Parse Lightspeed playbook into a variable
       ansible.builtin.set_fact:
-        lightspeed_playbook_lines: "{{ lightspeed_playbook.split('\n') }}"
-  
-    - name: Fix hosts value in Lightspeed playbook
-      vars:
-        fixed_lines: >-
+        parsed_playbook: "{{ lightspeed_playbook | from_yaml }}"
+
+    - name: Force hosts to 'all' in the first play
+      ansible.builtin.set_fact:
+        parsed_playbook: >-
           {{
-            lightspeed_playbook.split('\n') | map('regex_replace', '^(\\s*)hosts:\\s*nodes$', '\\1hosts: all') | list
+            parsed_playbook | map('combine', {'hosts': 'all'}) | list
           }}
+
+    - name: Convert back to string (preserve formatting)
       ansible.builtin.set_fact:
-        lightspeed_playbook: "{{ fixed_lines | join('\n') }}"
-      when: lightspeed_playbook is search('(?m)^\\s*hosts:\\s*nodes\\s*$')
+        lightspeed_playbook: "{{ parsed_playbook | to_nice_yaml(indent=2, sort_keys=False) }}"
 
     # Don't deserialize – just save the raw YAML string
     - name: Save formatted YAML response to file (preserve key order)
