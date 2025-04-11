@@ -35,7 +35,7 @@
         workflow_nodes:
           - identifier: remediation_generator
             unified_job_template:
-              name: 🧠 Lightspeed Remediation Playbook Generator
+              name: "🧠 Lightspeed Remediation Playbook Generator"
               organization: Default
               type: job_template
             related:
@@ -43,7 +43,7 @@
                 - commit_fix
           - identifier: commit_fix
             unified_job_template:
-              name: 🧾 Commit Fix to Gitea
+              name: "🧾 Commit Fix to Gitea"
               organization: Default
               type: job_template
             related:
@@ -59,6 +59,6 @@
                 - remediation_build
           - identifier: remediation_build
             unified_job_template:
-              name: ⚙️ Build HTTPD Remediation Template
+              name: "⚙️ Build HTTPD Remediation Template"
               organization: Default
               type: job_template
