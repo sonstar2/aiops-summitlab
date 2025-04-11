@@ -51,18 +51,18 @@
             related:
               success_nodes:
                 - project_sync
-          - identifier: project_sync
-            unified_job_template:
-              name: Lightspeed-Playbooks
-              organization:
-                name: Default
-              type: project
-            related:
-              success_nodes:
-                - remediation_build
-          - identifier: remediation_build
-            unified_job_template:
-              name: "⚙️ Build HTTPD Remediation Template"
-              organization:
-                name: Default
-              type: job_template
+          # - identifier: project_sync
+          #   unified_job_template:
+          #     name: Lightspeed-Playbooks
+          #     organization:
+          #       name: Default
+          #     type: project
+          #   related:
+          #     success_nodes:
+          #       - remediation_build
+          # - identifier: remediation_build
+          #   unified_job_template:
+          #     name: "⚙️ Build HTTPD Remediation Template"
+          #     organization:
+          #       name: Default
+          #     type: job_template
