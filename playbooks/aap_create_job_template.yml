@@ -41,28 +41,28 @@
               type: job_template
             related:
               success_nodes:
-                - commit_fix
+                - identifier: commit_fix
           - identifier: commit_fix
             unified_job_template:
               name: "🧾 Commit Fix to Gitea"
               organization:
                 name: Default
               type: job_template
-            # related:
-            #   success_nodes:
-            #     - project_sync
-          # - identifier: project_sync
-          #   unified_job_template:
-          #     name: Lightspeed-Playbooks
-          #     organization:
-          #       name: Default
-          #     type: project
-          #   related:
-          #     success_nodes:
-          #       - remediation_build
-          # - identifier: remediation_build
-          #   unified_job_template:
-          #     name: "⚙️ Build HTTPD Remediation Template"
-          #     organization:
-          #       name: Default
-          #     type: job_template
+            related:
+              success_nodes:
+                - identifier: project_sync
+          - identifier: project_sync
+            unified_job_template:
+              name: Lightspeed-Playbooks
+              organization:
+                name: Default
+              type: project
+            related:
+              success_nodes:
+                - identifier: remediation_build
+          - identifier: remediation_build
+            unified_job_template:
+              name: "⚙️ Build HTTPD Remediation Template"
+              organization:
+                name: Default
+              type: job_template
