@@ -48,9 +48,9 @@
               organization:
                 name: Default
               type: job_template
-            related:
-              success_nodes:
-                - project_sync
+            # related:
+            #   success_nodes:
+            #     - project_sync
           # - identifier: project_sync
           #   unified_job_template:
           #     name: Lightspeed-Playbooks
