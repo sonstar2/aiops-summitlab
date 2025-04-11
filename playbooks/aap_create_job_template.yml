@@ -27,6 +27,6 @@
 
     - name: Load remediation workflow template
       ansible.controller.workflow_job_template:
-        data: "{{ lookup('file', 'files/remediation_workflow.yaml') | from_yaml }}"
+        data: "{{ lookup('file', '../files/remediation_workflow.yaml') | from_yaml }}"
 
 
