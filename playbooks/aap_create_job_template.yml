@@ -36,7 +36,8 @@
           - identifier: remediation_generator
             unified_job_template:
               name: "🧠 Lightspeed Remediation Playbook Generator"
-              organization: Default
+              organization: 
+                name: Default
               type: job_template
             # related:
             #   success_nodes:
