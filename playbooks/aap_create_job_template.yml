@@ -31,4 +31,4 @@
         organization: Default
         state: present
         survey_enabled: true
-        survey_spec: "{{ lookup('template', playbook_dir + '/templates/survey.j2') }}"
+        survey_spec: "{{ lookup('template', playbook_dir + '/templates/survey.j2') | from_yaml  }}"
