@@ -3,7 +3,7 @@
   hosts: all
   sources:
    - ansible.eda.kafka:
-       host: service1
+       host: "{{ kafka_server | default('service1') }}"
        port: 9092
        topic: httpd-error-logs
 
