@@ -10,4 +10,4 @@
         filebeat_kafka_brokers: "service1:9092"
         filebeat_kafka_topic: "httpd-error-logs"
       ansible.builtin.include_role:
-        name: "../roles/filebeat"
+        name: lb2961.ai_driven_aap.kafka
